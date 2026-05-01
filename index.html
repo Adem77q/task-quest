@@ -272,3 +272,92 @@ changeAvatar();
 
 </body>
 </html>
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <title>🎮 Task Quest OPEN WORLD</title>
+  <style>
+    body {font-family: Arial; background:#0b0f1a; color:white; text-align:center; padding:10px;}
+    .card {background:rgba(255,255,255,0.08); margin:10px auto; padding:10px; width:360px; border-radius:12px;}
+    #map {width:320px; height:320px; margin:auto; background:#111; position:relative; border:2px solid #333;}
+    .player {position:absolute; width:20px; height:20px; background:gold; border-radius:50%;}
+    .enemy {position:absolute; width:18px; height:18px; background:red; border-radius:50%;}
+    button {margin:3px; padding:6px; border:none; border-radius:8px; background:gold; font-weight:bold;}
+  </style>
+</head>
+<body>
+
+<h1>🎮 Task Quest OPEN WORLD</h1>
+
+<div class="card">
+  <p>Level: <span id="level">1</span> | XP: <span id="xp">0</span> | Coins: <span id="coins">0</span></p>
+</div>
+
+<div class="card">
+  <div id="map">
+    <div class="player" id="player"></div>
+    <div class="enemy" id="enemy"></div>
+  </div>
+</div>
+
+<div class="card">
+  <button onclick="move('up')">⬆️</button><br>
+  <button onclick="move('left')">⬅️</button>
+  <button onclick="attack()">⚔️</button>
+  <button onclick="move('right')">➡️</button><br>
+  <button onclick="move('down')">⬇️</button>
+</div>
+
+<div class="card">
+  <h3>📜 Quest</h3>
+  <p id="quest">اهزم العدو 👹</p>
+</div>
+
+<script>
+let x=150,y=150;
+let ex=50,ey=50;
+let xp=0,level=1,coins=0;
+
+function update(){
+  player.style.left=x+"px";
+  player.style.top=y+"px";
+  enemy.style.left=ex+"px";
+  enemy.style.top=ey+"px";
+
+  document.getElementById("xp").innerText=xp;
+  document.getElementById("level").innerText=level;
+  document.getElementById("coins").innerText=coins;
+}
+
+function move(dir){
+  if(dir=="up") y-=10;
+  if(dir=="down") y+=10;
+  if(dir=="left") x-=10;
+  if(dir=="right") x+=10;
+  update();
+}
+
+function attack(){
+  let dx=Math.abs(x-ex);
+  let dy=Math.abs(y-ey);
+
+  if(dx<30 && dy<30){
+    xp+=10;
+    coins+=5;
+    alert("💥 ضربت العدو!");
+    ex=Math.random()*280;
+    ey=Math.random()*280;
+    if(xp>=50){xp=0;level++;alert("🔥 Level Up!");}
+  }else{
+    alert("العدو بعيد!");
+  }
+
+  update();
+}
+
+update();
+</script>
+
+</body>
+</html>
