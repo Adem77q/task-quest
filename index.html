@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <title>🎮 Task Quest</title>
+  <style>
+    body {
+      font-family: Arial;
+      background: linear-gradient(135deg, #1e3c72, #2a5298);
+      color: white;
+      text-align: center;
+      padding: 20px;
+    }
+
+    h1 {
+      margin-bottom: 10px;
+    }
+
+    .card {
+      background: rgba(255,255,255,0.1);
+      padding: 15px;
+      border-radius: 15px;
+      margin: 10px auto;
+      width: 300px;
+    }
+
+    input, select, button {
+      padding: 8px;
+      margin: 5px;
+      border-radius: 8px;
+      border: none;
+    }
+
+    button {
+      background: gold;
+      cursor: pointer;
+    }
+
+    li {
+      margin: 8px;
+    }
+
+    .stats {
+      margin-top: 15px;
+    }
+  </style>
+</head>
+<body>
+
+<h1>🎮 Task Quest</h1>
+<p>حوّل مهامك إلى لعبة!</p>
+
+<div class="card">
+  <input id="taskInput" placeholder="اكتب مهمة">
+  <select id="difficulty">
+    <option value="5">سهل</option>
+    <option value="10">متوسط</option>
+    <option value="20">صعب</option>
+  </select>
+  <br>
+  <button onclick="addTask()">➕ إضافة مهمة</button>
+</div>
+
+<div class="card">
+  <h3>📋 المهام</h3>
+  <ul id="taskList"></ul>
+</div>
+
+<div class="card stats">
+  <h3>👤 الشخصية</h3>
+  <p>Level: <span id="level">1</span></p>
+  <p>XP: <span id="xp">0</span></p>
+  <p>Coins: <span id="coins">0</span></p>
+</div>
+
+<script>
+let xp = 0;
+let level = 1;
+let coins = 0;
+
+function addTask() {
+  let text = document.getElementById("taskInput").value;
+  let value = parseInt(document.getElementById("difficulty").value);
+
+  if (text === "") return;
+
+  let li = document.createElement("li");
+  li.innerHTML = `${text} (+${value} XP) <button onclick='completeTask(this, ${value})'>✔️</button>`;
+
+  document.getElementById("taskList").appendChild(li);
+  document.getElementById("taskInput").value = "";
+}
+
+function completeTask(btn, value) {
+  btn.parentElement.remove();
+  xp += value;
+  coins += Math.floor(value / 2);
+
+  if (xp >= level * 50) {
+    xp = 0;
+    level++;
+    alert("🎉 لقد ارتقيت إلى مستوى جديد!");
+  }
+
+  updateStats();
+}
+
+function updateStats() {
+  document.getElementById("xp").innerText = xp;
+  document.getElementById("level").innerText = level;
+  document.getElementById("coins").innerText = coins;
+}
+</script>
+
+</body>
+</html>
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <title>🎮 Task Quest PRO</title>
+  <style>
+    body {
+      font-family: Arial;
+      background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+      color: white;
+      text-align: center;
+      padding: 20px;
+    }
+
+    h1 { margin-bottom: 5px; }
+
+    .card {
+      background: rgba(255,255,255,0.1);
+      padding: 15px;
+      border-radius: 15px;
+      margin: 10px auto;
+      width: 320px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.3);
+    }
+
+    input, select, button {
+      padding: 8px;
+      margin: 5px;
+      border-radius: 8px;
+      border: none;
+    }
+
+    button {
+      background: gold;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    li {
+      margin: 8px;
+      list-style: none;
+    }
+
+    .avatar {
+      font-size: 40px;
+    }
+
+    .progress {
+      background: #333;
+      border-radius: 10px;
+      overflow: hidden;
+      margin-top: 10px;
+    }
+
+    .bar {
+      height: 10px;
+      background: lime;
+      width: 0%;
+    }
+  </style>
+</head>
+<body>
+
+<h1>🎮 Task Quest PRO</h1>
+<p>حوّل حياتك إلى لعبة 🔥</p>
+
+<div class="card">
+  <div class="avatar" id="avatar">🧑</div>
+  <p>Level: <span id="level">1</span></p>
+  <p>XP: <span id="xp">0</span></p>
+  <p>Coins: <span id="coins">0</span></p>
+  <p>🔥 Streak: <span id="streak">0</span></p>
+
+  <div class="progress">
+    <div class="bar" id="xpBar"></div>
+  </div>
+</div>
+
+<div class="card">
+  <input id="taskInput" placeholder="اكتب مهمة">
+  <select id="difficulty">
+    <option value="5">سهل</option>
+    <option value="10">متوسط</option>
+    <option value="20">صعب</option>
+  </select>
+  <br>
+  <button onclick="addTask()">➕ إضافة مهمة</button>
+</div>
+
+<div class="card">
+  <h3>📋 المهام</h3>
+  <ul id="taskList"></ul>
+</div>
+
+<script>
+let xp = localStorage.getItem("xp") ? parseInt(localStorage.getItem("xp")) : 0;
+let level = localStorage.getItem("level") ? parseInt(localStorage.getItem("level")) : 1;
+let coins = localStorage.getItem("coins") ? parseInt(localStorage.getItem("coins")) : 0;
+let streak = localStorage.getItem("streak") ? parseInt(localStorage.getItem("streak")) : 0;
+
+function saveData() {
+  localStorage.setItem("xp", xp);
+  localStorage.setItem("level", level);
+  localStorage.setItem("coins", coins);
+  localStorage.setItem("streak", streak);
+}
+
+function addTask() {
+  let text = document.getElementById("taskInput").value;
+  let value = parseInt(document.getElementById("difficulty").value);
+
+  if (text === "") return;
+
+  let li = document.createElement("li");
+  li.innerHTML = `${text} (+${value} XP) <button onclick='completeTask(this, ${value})'>✔️</button>`;
+
+  document.getElementById("taskList").appendChild(li);
+  document.getElementById("taskInput").value = "";
+}
+
+function completeTask(btn, value) {
+  btn.parentElement.remove();
+  xp += value;
+  coins += Math.floor(value / 2);
+  streak++;
+
+  if (xp >= level * 50) {
+    xp = 0;
+    level++;
+    alert("🎉 Level Up!");
+    changeAvatar();
+  }
+
+  updateStats();
+  saveData();
+}
+
+function changeAvatar() {
+  let avatars = ["🧑","🧙","🦸","👑","🐉"];
+  document.getElementById("avatar").innerText = avatars[level % avatars.length];
+}
+
+function updateStats() {
+  document.getElementById("xp").innerText = xp;
+  document.getElementById("level").innerText = level;
+  document.getElementById("coins").innerText = coins;
+  document.getElementById("streak").innerText = streak;
+
+  let percent = (xp / (level * 50)) * 100;
+  document.getElementById("xpBar").style.width = percent + "%";
+}
+
+updateStats();
+changeAvatar();
+</script>
+
+</body>
+</html>
