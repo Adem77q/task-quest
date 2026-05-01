@@ -646,4 +646,162 @@ update();
 </script>
 
 </body>
+</html><!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<title>🎮 Task Quest ULTIMATE</title>
+<style>
+body{font-family:Arial;background:#060913;color:white;text-align:center;margin:0;padding:10px;}
+.card{background:rgba(255,255,255,0.07);margin:10px auto;padding:12px;width:420px;border-radius:14px;}
+#map{width:420px;height:420px;margin:auto;background:#0f1220;position:relative;border:2px solid #2a2f4a;overflow:hidden;}
+.player{position:absolute;width:20px;height:20px;background:gold;border-radius:50%;}
+.enemy{position:absolute;width:18px;height:18px;background:red;border-radius:50%;}
+button{margin:3px;padding:7px;border:none;border-radius:8px;background:gold;font-weight:bold;cursor:pointer;}
+input{padding:6px;border-radius:8px;border:none;}
+li{list-style:none;margin:6px;}
+.bar{height:10px;background:lime;width:0%;border-radius:10px;}
+</style>
+</head>
+<body>
+
+<h1>🎮 Task Quest ULTIMATE</h1>
+
+<div class="card">
+👤 Level: <span id="level">1</span> |
+⭐ XP: <span id="xp">0</span> |
+🪙 Coins: <span id="coins">0</span>
+<div style="background:#222;border-radius:10px;margin-top:8px;">
+<div class="bar" id="bar"></div>
+</div>
+</div>
+
+<div class="card">
+<h3>📜 المهام (Quests)</h3>
+<input id="taskInput" placeholder="اكتب مهمة">
+<button onclick="addTask()">➕</button>
+<ul id="taskList"></ul>
+</div>
+
+<div class="card">
+<h3>🗺 الخريطة</h3>
+<div id="map">
+<div class="player" id="player"></div>
+</div>
+</div>
+
+<div class="card">
+<button onclick="move('up')">⬆️</button><br>
+<button onclick="move('left')">⬅️</button>
+<button onclick="attack()">⚔️</button>
+<button onclick="move('right')">➡️</button><br>
+<button onclick="move('down')">⬇️</button>
+</div>
+
+<div class="card">
+<h3>👹 Boss</h3>
+<p>HP: <span id="bossHp">120</span></p>
+<button onclick="bossFight()">💥 هجوم</button>
+</div>
+
+<div class="card">
+<h3>🛒 المتجر</h3>
+<button onclick="buy('sword',20)">⚔️ سيف (+قوة)</button>
+<button onclick="buy('shield',30)">🛡 درع</button>
+<p id="inv">Inventory: فارغ</p>
+</div>
+
+<script>
+// ===== PLAYER =====
+let x=200,y=200;
+let xp=0,level=1,coins=0;
+let power=10;
+let inventory=[];
+let bossHp=120;
+
+// ===== FIX TASK SYSTEM =====
+function addTask(){
+  let text=document.getElementById("taskInput").value.trim();
+  if(text=="")return;
+
+  let li=document.createElement("li");
+  li.innerHTML=`${text} <button onclick="completeTask(this)">✔️</button>`;
+  document.getElementById("taskList").appendChild(li);
+  document.getElementById("taskInput").value="";
+}
+
+function completeTask(btn){
+  btn.parentElement.remove();
+  xp+=10;
+  coins+=5;
+
+  if(xp>=level*50){
+    xp=0;
+    level++;
+    power+=5;
+    alert("🔥 Level Up!");
+  }
+
+  update();
+}
+
+// ===== MAP =====
+function move(dir){
+  if(dir=="up")y-=10;
+  if(dir=="down")y+=10;
+  if(dir=="left")x-=10;
+  if(dir=="right")x+=10;
+
+  x=Math.max(0,Math.min(400,x));
+  y=Math.max(0,Math.min(400,y));
+
+  update();
+}
+
+// ===== BOSS =====
+function bossFight(){
+  if(xp<5){alert("اجمع XP أولاً!");return;}
+
+  bossHp-=power;
+  xp-=5;
+
+  if(bossHp<=0){
+    alert("🏆 هزمت البوس!");
+    coins+=50;
+    bossHp=120+level*20;
+  }
+
+  update();
+}
+
+// ===== SHOP =====
+function buy(item,price){
+  if(coins<price){alert("لا يوجد Coins");return;}
+
+  coins-=price;
+  inventory.push(item);
+
+  if(item=="sword") power+=10;
+
+  update();
+}
+
+// ===== UPDATE =====
+function update(){
+  player.style.left=x+"px";
+  player.style.top=y+"px";
+
+  document.getElementById("xp").innerText=xp;
+  document.getElementById("level").innerText=level;
+  document.getElementById("coins").innerText=coins;
+  document.getElementById("bossHp").innerText=bossHp;
+  document.getElementById("inv").innerText="Inventory: "+(inventory.join(", ")||"فارغ");
+
+  document.getElementById("bar").style.width=(xp/(level*50))*100+"%";
+}
+
+update();
+</script>
+
+</body>
 </html>
